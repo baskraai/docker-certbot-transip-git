@@ -34,6 +34,7 @@ do
 done
 
 echo_info "Configuring git"
+mkdir ~/.ssh
 echo "${SSH_PUBKEY}" > ~/.ssh/id_ecdsa.pub
 chmod 600 ~/.ssh/id_ecdsa.pub
 echo "${SSH_PRIVKEY}" > ~/.ssh/id_ecdsa
