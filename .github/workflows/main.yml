@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron:  '0 0 * * 2'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - uses: docker/login-action@v1
+        name: Login to DockerHub
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # In this step, this action saves a list of existing images,
+      # the cache is created without them in the post run.
+      # It also restores the cache if it exists.
+      - uses: satackey/action-docker-layer-caching@v0.0.8
+        # Ignore the failure of a step and avoid terminating the job.
+        continue-on-error: true
+
+      - name: Pull the most recent version of the ubuntu docker container
+        run: docker pull baskraai/certbot-dns-transip
+
+      - name: Build the container
+        run: docker build -t baskraai/docker-certbot-transip-git:stable .
+
+      - name: Push build as most recent
+        run: docker push baskraai/docker-certbot-transip-git:stable
