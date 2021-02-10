@@ -58,7 +58,8 @@ if [ "$MODE" == "create" ] && [[ -z "$DOMAIN" ]]; then
 	exit 1
 elif [ "$MODE" == "create" ]; then
 	echo_info "Running the certonly-command"
-	certbot certonly -n -d "${DOMAIN}" -a certbot-dns-transip:dns-transip --certbot-dns-transip:dns-transip-credentials /etc/letsencrypt/transip.ini --certbot-dns-transip:dns-transip-propagation-seconds 600 -m "${EMAIL}" --agree-tos	
+	CERT_NAME="${DOMAIN//\*/star}"
+	certbot certonly --cert-name "${CERT_NAME}" -n -d "${DOMAIN}" -a certbot-dns-transip:dns-transip --certbot-dns-transip:dns-transip-credentials /etc/letsencrypt/transip.ini --certbot-dns-transip:dns-transip-propagation-seconds 600 -m "${EMAIL}" --agree-tos	
 	echo_ok "Running the certonly-command"
 	echo_info "Git add and push"
 	git add ./*
