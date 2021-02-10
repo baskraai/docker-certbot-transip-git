@@ -64,3 +64,5 @@ else
 	certbot renew
 	echo_ok "Running the renew-command"
 fi	
+
+sleep 3600
