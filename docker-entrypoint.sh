@@ -44,8 +44,9 @@ git config --global user.email "$EMAIL"
 echo_ok "Configuring git"
 
 echo_info "Pulling the repo"
-GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git clone "${GIT_REPO}" repo
-cd repo
+cd /etc
+GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git clone "${GIT_REPO}" letsencrypt
+cd letsencrypt
 if [ "$?" != 0 ]; then
 	echo_failed "Error, could not pull repo"
 	exit 1
@@ -59,10 +60,18 @@ elif [ "$MODE" == "create" ]; then
 	echo_info "Running the certonly-command"
 	certbot certonly -n -d "${DOMAIN}" -a certbot-dns-transip:dns-transip --certbot-dns-transip:dns-transip-credentials /etc/letsencrypt/transip.ini --certbot-dns-transip:dns-transip-propagation-seconds 600 -m "${EMAIL}" --agree-tos	
 	echo_ok "Running the certonly-command"
+	echo_info "Git add and push"
+	git add ./*
+	git commit -m "update $(date)"
+	git push
+	echo_ok "Git add and push"
 else
 	echo_info "Running the renew-command"
 	certbot renew
 	echo_ok "Running the renew-command"
+	echo_info "Git add and push"
+	git add ./*
+	git commit -m "update $(date)"
+	git push
+	echo_ok "Git add and push"
 fi	
-
-sleep 3600
