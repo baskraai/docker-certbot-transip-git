@@ -44,7 +44,7 @@ git config --global user.email "$EMAIL"
 echo_ok "Configuring git"
 
 echo_info "Pulling the repo"
-git clone "${GIT_REPO}"
+GIT_SSH_COMMAND="ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no" git clone "${GIT_REPO}"
 if [ "$?" != 0 ]; then
 	echo_failed "Error, could not pull repo"
 	exit 1
