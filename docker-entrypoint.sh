@@ -76,3 +76,6 @@ else
 	git push
 	echo_ok "Git add and push"
 fi	
+
+echo_ok "Run done, bye!"
+exit 0
